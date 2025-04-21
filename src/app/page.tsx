@@ -13,9 +13,19 @@ import {
 import { Button } from "@/app/_components/Button";
 import { Form } from "@/app/_components/ui/form";
 import { createRoomSchema } from "@/validation";
-import { TextField } from "./_components/TextField";
+import { TextField } from "@/app/_components/TextField";
+import { api } from "@/trpc/react";
+import { useRouter } from "next/navigation";
 
 const Index = () => {
+  const router = useRouter();
+
+  const createRoomMutation = api.room.create.useMutation({
+    onSuccess: (data) => {
+      router.push(`/room/${data.id}`);
+    },
+  });
+
   const form = useForm<z.infer<typeof createRoomSchema>>({
     resolver: zodResolver(createRoomSchema),
     defaultValues: {
@@ -35,12 +45,16 @@ const Index = () => {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit((values) => {
-              console.log(values);
+              createRoomMutation.mutate(values);
             })}
             className="space-y-6"
           >
             <TextField form={form} name="diceCount" />
-            <Button type="submit" className="w-full" isLoading={false}>
+            <Button
+              type="submit"
+              className="w-full"
+              isLoading={createRoomMutation.isPending}
+            >
               Create Game Room
             </Button>
           </form>

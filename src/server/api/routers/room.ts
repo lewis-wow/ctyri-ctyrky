@@ -30,7 +30,7 @@ export const roomRouter = createTRPCRouter({
   get: publicProcedure
     .input(getRoomSchema)
     .output(roomSchema)
-    .mutation(async ({ input, ctx }) => {
+    .query(async ({ input, ctx }) => {
       const room = ctx.collections.rooms.findOne({
         id: input.id,
       });
