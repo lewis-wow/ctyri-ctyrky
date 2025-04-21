@@ -1,9 +1,17 @@
 import { v4 as uuidv4 } from "uuid";
 
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
-import { createRoomSchema, getRoomSchema, roomSchema } from "@/validation";
+import {
+  createRoomSchema,
+  getRoomSchema,
+  playerSchema,
+  roomSchema,
+} from "@/validation";
 import { TRPCError } from "@trpc/server";
 import uniqolor from "uniqolor";
+import jwt from "jsonwebtoken";
+import type { z } from "zod";
+import { cookies } from "next/headers";
 
 export const roomRouter = createTRPCRouter({
   create: publicProcedure
@@ -12,24 +20,19 @@ export const roomRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       const roomId = uuidv4();
 
-      const playerId = uuidv4();
-      const playerColor = uniqolor.random().color;
-      const playerName = `Player`;
-      const playerRole = "HOST";
+      const player: z.infer<typeof playerSchema> = {
+        id: uuidv4(),
+        name: "Unknown Player",
+        color: uniqolor.random().color,
+        role: "HOST",
+      };
 
       const room = ctx.collections.rooms.insertOne({
         id: roomId,
         settings: {
           diceCount: input.diceCount,
         },
-        players: [
-          {
-            id: playerId,
-            name: playerName,
-            color: playerColor,
-            role: playerRole,
-          },
-        ],
+        players: [player],
       });
 
       if (!room) {
@@ -38,6 +41,23 @@ export const roomRouter = createTRPCRouter({
           message: "Failed to create room",
         });
       }
+
+      const token = jwt.sign(
+        {
+          playerId: player.id,
+          playerRole: player.role,
+          roomId: roomId,
+        },
+        "JWT_SECRET",
+        { expiresIn: "7d" },
+      );
+
+      const cookieStore = await cookies();
+
+      cookieStore.set("playerToken", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+      });
 
       return room;
     }),
