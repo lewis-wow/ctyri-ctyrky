@@ -1,5 +1,14 @@
 import { z } from "zod";
 
+export const playerRoleSchema = z.enum(["PLAYER", "HOST", "SPECTATOR"]);
+
+export const playerSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  color: z.string(),
+  role: playerRoleSchema,
+});
+
 export const createRoomSchema = z.object({
   diceCount: z
     .number()
@@ -16,4 +25,5 @@ export const roomSchema = z.object({
   settings: z.object({
     diceCount: z.number(),
   }),
+  players: z.array(playerSchema),
 });

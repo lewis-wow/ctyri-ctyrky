@@ -10,11 +10,3 @@ export const roomsCollection = db.addCollection<z.infer<typeof roomSchema>>(
     indices: ["id"],
   },
 );
-
-export const usersCollection = db.addCollection("users", {
-  indices: ["id"],
-});
-
-export const gamesCollection = db.addCollection("games", {
-  indices: ["id"],
-});

@@ -71,6 +71,9 @@ importers:
       ts-pattern:
         specifier: ^5.7.0
         version: 5.7.0
+      uniqolor:
+        specifier: ^1.1.1
+        version: 1.1.1
       uuid:
         specifier: ^11.1.0
         version: 11.1.0
@@ -1980,6 +1983,9 @@ packages:
 
   undici-types@6.19.8:
     resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
+
+  uniqolor@1.1.1:
+    resolution: {integrity: sha512-HUwezlXCwm5bzsEXW7AP7ybezH13uWENRgYT+3dOdhJPvpYucSqvIGckMiLn+Uy2j0NVf3fPp43uZ4aun3t4Ww==}
 
   unrs-resolver@1.6.3:
     resolution: {integrity: sha512-mYNIMmxlDcaepmUTNrBu2tEB/bRkLBUeAhke8XOnXYqSu/9dUk4cdFiJG1N4d5Q7Fii+9MpgavkxJpnXPqNhHw==}
@@ -3959,6 +3965,8 @@ snapshots:
       which-boxed-primitive: 1.1.1
 
   undici-types@6.19.8: {}
+
+  uniqolor@1.1.1: {}
 
   unrs-resolver@1.6.3:
     dependencies:

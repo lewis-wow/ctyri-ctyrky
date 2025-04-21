@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { createRoomSchema, getRoomSchema, roomSchema } from "@/validation";
 import { TRPCError } from "@trpc/server";
+import uniqolor from "uniqolor";
 
 export const roomRouter = createTRPCRouter({
   create: publicProcedure
@@ -11,11 +12,24 @@ export const roomRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       const roomId = uuidv4();
 
+      const playerId = uuidv4();
+      const playerColor = uniqolor.random().color;
+      const playerName = `Player`;
+      const playerRole = "HOST";
+
       const room = ctx.collections.rooms.insertOne({
         id: roomId,
         settings: {
           diceCount: input.diceCount,
         },
+        players: [
+          {
+            id: playerId,
+            name: playerName,
+            color: playerColor,
+            role: playerRole,
+          },
+        ],
       });
 
       if (!room) {
