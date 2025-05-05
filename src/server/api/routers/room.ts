@@ -4,13 +4,14 @@ import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import {
   createRoomSchema,
   getRoomSchema,
-  playerSchema,
+  joinRoomSchema,
+  type playerSchema,
   roomSchema,
 } from "@/validation";
 import { TRPCError } from "@trpc/server";
 import uniqolor from "uniqolor";
 import jwt from "jsonwebtoken";
-import type { z } from "zod";
+import { z } from "zod";
 import { cookies } from "next/headers";
 
 export const roomRouter = createTRPCRouter({
@@ -61,6 +62,14 @@ export const roomRouter = createTRPCRouter({
 
       return room;
     }),
+  join: publicProcedure
+    .input(joinRoomSchema)
+    .output(roomSchema)
+    .mutation(async ({ input, ctx }) => {}),
+  ping: publicProcedure
+    .input(z.object({ roomId: z.string() }))
+    .output(z.object({ message: z.string() }))
+    .subscription(({ input }) => {}),
   get: publicProcedure
     .input(getRoomSchema)
     .output(roomSchema)

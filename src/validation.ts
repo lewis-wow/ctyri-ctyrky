@@ -27,3 +27,7 @@ export const roomSchema = z.object({
   }),
   players: z.array(playerSchema),
 });
+
+export const joinRoomSchema = z.object({
+  roomId: z.string(),
+});
